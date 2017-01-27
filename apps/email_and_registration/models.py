@@ -4,7 +4,6 @@ import bcrypt
 from datetime import datetime
 from django.db import models
 from ..wish_items.models import WishItem
-# from django.contrib.auth.models import WishItem
 
 class UserManager(models.Manager):
     def validate_register(self, registerData):
@@ -86,10 +85,6 @@ class UserManager(models.Manager):
         }
         return user_obj
 
-    # def get_user()
-
-
-# Create your models here.
 class User(models.Model):
     name       = models.CharField(max_length=255)
     username   = models.CharField(max_length=255)
@@ -99,6 +94,3 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     wish_items = models.ManyToManyField(WishItem)
     objects    = UserManager()
-
-    # def __unicode__(self):
-    #     return "%s (%s)" % (self.email, self.group[:10])

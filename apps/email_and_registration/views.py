@@ -14,8 +14,6 @@ def index(request):
     return render(request, 'email_and_registration/index.html', context)
 
 def register(request):
-    print request.POST
-    # return redirect('/main')
     errors = User.objects.validate_register(request.POST)
 
     if len(errors) > 0:
@@ -23,12 +21,7 @@ def register(request):
             messages.error(request, error)
         return redirect('users:index')
     else:
-        print 'EVERYTHING VALID!!!'
         user_with_encrypted = User.objects.encrypt_password(request.POST)
-        # format_date = user_with_encrypted['date_hired'].split('-')
-        # # print format_date
-        # user_with_encrypted['date_hired'] = datetime(int(format_date[0]), int(format_date[1]), int(format_date[2]))
-        # print user_with_encrypted
         new_user = User.objects.create(
             name       = user_with_encrypted['name'],
             username   = user_with_encrypted['username'],
@@ -40,11 +33,6 @@ def register(request):
         return redirect('users:dashboard')
 
 def login(request):
-    print request.POST
-    # user = User.objects.filter(username=request.POST['username']).first()
-    # print user
-    # return redirect('users:index')
-    # returns tuple (id, [errors...])
     login = User.objects.validate_login(request.POST)
     user_id, errors = login
     if len(errors) > 0 or not user_id:
@@ -65,10 +53,14 @@ def dashboard(request):
 
     # get all users wishlist, get a few other ppls wishlist items
     user = User.objects.filter(id=request.session['user_id']).first()
-    # print user.wish_items.all()
-    # WishItem.objects.all().delete()
+
+    # get 5 wish items that arent the users
+    wish_items = WishItem.objects.filter(user=None)
+    all_wish_items = WishItem.objects.all()
     context = {
-        'user': user
+        'user': user,
+        'not_user_wish_items': wish_items,
+        'all_wish_items': all_wish_items
     }
     # messages.success(request, 'fully logged in!')
     return render(request, 'email_and_registration/dashboard.html', context)

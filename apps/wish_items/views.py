@@ -15,9 +15,7 @@ def new(request):
     return render(request, 'wish_items/new.html')
 
 def create(request):
-    print request.POST
     user = User.objects.filter(id=request.session['user_id']).first()
-    print 'USER', user
     # need validation eventually
     wish_item = WishItem(name=request.POST['item_name'], user_id=user)
     wish_item.save()
@@ -25,7 +23,21 @@ def create(request):
     user.save()
     return redirect('users:dashboard')
 
+def delete_item(request, id):
+    item = WishItem.objects.filter(id=id)
+    item.delete()
+    return redirect('users:dashboard')
+
 def remove_item(request, id):
-    print request.POST
-    print 'ID: ', id
+    user = User.objects.filter(id=request.session['user_id']).first()
+    item = WishItem.objects.filter(id=id).first()
+    user.wish_items.remove(item)
+    user.save()
+    return redirect('users:dashboard')
+
+def add_item(request, id):
+    user = User.objects.filter(id=request.session['user_id']).first()
+    item = WishItem.objects.filter(id=id).first()
+    user.wish_items.add(item)
+    user.save()
     return redirect('users:dashboard')

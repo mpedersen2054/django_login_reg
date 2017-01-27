@@ -29,7 +29,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1>Success! Welcome {{user.name}}, {{user.username}}</h1>
+        <h1>{{user.name}}'s Dashboard</h1>
       </div>
     </div>
     <div class="row">
@@ -57,10 +57,21 @@
                   <td>
                     <a href="{% url 'wish_items:show_item' id=item.id %}">{{item.name}}</a>
                   </td>
-                  <td>{{user.name}}</td>
+                  <td>{{item.user_id.name}}</td>
                   <td>{{item.created_at}}</td>
                   <td>
-                    <a href="{% url 'wish_items:remove_item' id=item.id %}">Remove from wishlist</a>
+                    {% if item.user_id.id == request.session.user_id %}
+                      <form action="{% url 'wish_items:delete_item' id=item.id %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete" class="btn btn-link">
+                      </form>
+                    {% else %}
+                      <form action="{% url 'wish_items:remove_item' id=item.id %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Remove from wishlist" class="btn btn-link">
+                      </form>
+                    {% endif %}
+
                   </td>
                 </tr>
               {% endfor %}
@@ -73,7 +84,7 @@
     <div class="row">
       <div class="col-md-10">
         <div class="other-user-wishlist">
-          <h3>Other users wishlist:</h3>
+          <h3>Other users wishlist: (not 100% correct :( )</h3>
           <table class="table">
             <thead>
               <tr>
@@ -84,12 +95,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>hello</td>
-                <td>hello</td>
-                <td>hello</td>
-                <td>hello</td>
-              </tr>
+              {% for item in all_wish_items %}
+                <tr>
+                  <td>
+                    <a href="{% url 'wish_items:show_item' id=item.id %}">{{item.name}}</a>
+                  </td>
+                  <td>{{item.user_id.name}}</td>
+                  <td>{{item.created_at}}</td>
+                  <td>
+                    <form action="{% url 'wish_items:add_item' id=item.id %}">
+                      {% csrf_token %}
+                      <input type="submit" value="Add to wishlist" class="btn btn-link">
+                    </form>
+
+                  </td>
+                </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
