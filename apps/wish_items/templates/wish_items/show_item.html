@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wishlist app</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  {% load static %}
+  <!-- <link rel="stylesheet" href="{% static 'email_and_registration/css/styles.css' %}"> -->
+
+  <style>
+    .nav {
+      float: right;
+      margin: 20px 0;
+    }
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    {% include 'wish_items/_navbar.html' %}
+
+    <div class="row">
+      <div class="col-md-8">
+        <h1>iPhone 99</h1>
+
+        <h3>Users who have this added to their wishlist:</h3>
+        <ul>
+          <li>Mark</li>
+          <li>Frank</li>
+          <li>Paul</li>
+          <li>Sam</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+
+</body>
+</html>
