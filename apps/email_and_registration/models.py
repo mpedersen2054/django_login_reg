@@ -1,9 +1,9 @@
 from __future__ import unicode_literals
 import re
 import bcrypt
-# from __future__ import unicode_literals
-
+from datetime import datetime
 from django.db import models
+from ..wish_items.models import WishItem
 
 class UserManager(models.Manager):
     def validate_register(self, registerData):
@@ -11,21 +11,22 @@ class UserManager(models.Manager):
         letter_only_regex = '^[a-zA-Z]+$'
         email_format_regex = '^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$'
 
-        first_name_valid    = False
-        last_name_valid     = False
-        email_valid         = False
+        name_valid          = False
+        username_valid      = False
+        date_hired_valid    = False
         password_valid      = False
         password_conf_valid = False
         user_exists         = False
 
-        # first_name & last_name more than 2 chars, letters only
-        if re.match(letter_only_regex, registerData['first_name']) and len(registerData['first_name']) > 2:
-            first_name_valid = True
-        if re.match(letter_only_regex, registerData['last_name']) and len(registerData['last_name']) > 2:
-            last_name_valid = True
-        # email valid format & exists
-        if re.match(email_format_regex, registerData['email']) and len(registerData['email']) > 0:
-            email_valid = True
+        # 3 chars
+        if len(registerData['name']) > 3:
+            name_valid = True
+        if len(registerData['username']) > 3:
+            username_valid = True
+
+        if len(registerData['hired_at']) > 1:
+            date_hired_valid = True
+
         # password exists, more than 8 chars
         if len(registerData['password']) > 8:
             password_valid = True
@@ -34,16 +35,16 @@ class UserManager(models.Manager):
             password_conf_valid = True
 
         # check if email exists in the db
-        user = User.objects.filter(email=registerData['email'])
+        user = User.objects.filter(username=registerData['username'])
         if len(user) > 0:
             user_exists = True
 
-        if not first_name_valid:
-            errors.append('The first name was invalid. It needs to be only letters and at least 2 characters')
-        if not last_name_valid:
-            errors.append('The last name was invalid. It needs to be only letters and at least 2 characters')
-        if not email_valid:
-            errors.append('The email was not valid.')
+        if not name_valid:
+            errors.append('Your name must be at least 3 characters.')
+        if not username_valid:
+            errors.append('Username must be atleast 3 characters.')
+        if not date_hired_valid:
+            errors.append('Need to fill in a date.')
         if not password_valid:
             errors.append('The password was not valid.')
         if not password_conf_valid:
@@ -77,9 +78,9 @@ class UserManager(models.Manager):
             return False
         hashed = bcrypt.hashpw(userObj['password'].encode(), bcrypt.gensalt())
         user_obj = {
-            'first_name': userObj['first_name'],
-            'last_name':  userObj['last_name'],
-            'email':      userObj['email'],
+            'name':       userObj['name'],
+            'username':   userObj['username'],
+            'hired_at': userObj['hired_at'],
             'password':   hashed
         }
         return user_obj
@@ -89,12 +90,13 @@ class UserManager(models.Manager):
 
 # Create your models here.
 class User(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name  = models.CharField(max_length=50)
-    email      = models.CharField(max_length=50)
+    name       = models.CharField(max_length=255)
+    username   = models.CharField(max_length=255)
     password   = models.CharField(max_length=255)
+    hired_at   = models.DateTimeField(default=datetime.now)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    wish_items = models.ManyToManyField(WishItem)
     objects    = UserManager()
 
     # def __unicode__(self):
