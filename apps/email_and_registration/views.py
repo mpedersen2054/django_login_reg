@@ -60,8 +60,13 @@ def dashboard(request):
     or request.session['user_id'] == None:
         messages.error(request, 'You need to be logged in to go to that route.')
         return redirect('users:index')
+
+
+    # get all users wishlist, get a few other ppls wishlist items
+    user = User.objects.filter(id=request.session['user_id']).first()
+    print user.wish_items.all()
     context = {
-        'user': User.objects.filter(id=request.session['user_id']).first()
+        'user': user
     }
     # messages.success(request, 'fully logged in!')
     return render(request, 'email_and_registration/dashboard.html', context)
