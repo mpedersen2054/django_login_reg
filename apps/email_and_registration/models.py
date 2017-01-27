@@ -57,7 +57,7 @@ class UserManager(models.Manager):
     def validate_login(self, loginData):
         errors = []
 
-        user = User.objects.filter(email=loginData['email']).first()
+        user = User.objects.filter(username=loginData['username']).first()
 
         if not user:
             errors.append('A user with that email doesnt exist in the database. Please register.')

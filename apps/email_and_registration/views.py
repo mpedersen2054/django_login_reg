@@ -39,16 +39,21 @@ def register(request):
         return redirect('users:dashboard')
 
 def login(request):
+    print request.POST
+    # user = User.objects.filter(username=request.POST['username']).first()
+    # print user
+    # return redirect('users:index')
     # returns tuple (id, [errors...])
     login = User.objects.validate_login(request.POST)
     user_id, errors = login
     if len(errors) > 0 or not user_id:
         for error in errors:
             messages.error(request, error)
+        return redirect('users:index')
     else:
         request.session['user_id'] = user_id
         messages.success(request, 'fully logged in!')
-    return redirect('users:dashboard')
+        return redirect('users:dashboard')
 
 def dashboard(request):
     if not 'user_id' in request.session \
