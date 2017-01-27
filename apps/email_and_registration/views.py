@@ -27,7 +27,7 @@ def register(request):
             password = user_with_encrypted['password']
         )
         messages.success(request, 'Successfully registered user.')
-    return redirect(reverse('users:index'))
+    return redirect(reverse('users:success'))
 
 def login(request):
     # returns tuple (id, [errors...])
@@ -40,14 +40,20 @@ def login(request):
             messages.error(request, error)
     else:
         request.session['user_id'] = user_id
-        messages.success(request, 'Successfully logged in.')
-    return redirect(reverse('users:index'))
+    return redirect(reverse('users:success'))
 
-# def success(request):
-#     if not 'user_id' in request.session:
-#         return redirect('/')
-#     context = {
-#         'user': User.objects.filter(id=request.session['user_id']).first()
-#     }
-#     messages.success(request, 'Successfully logged in!')
-#     return render(request, 'email_and_registration/success.html', context)
+def success(request):
+    print request.session['user_id']
+    if not 'user_id' in request.session \
+    or request.session['user_id'] == None:
+        messages.error(request, 'You need to be logged in to go to that route.')
+        return redirect('users:index')
+    context = {
+        'user': User.objects.filter(id=request.session['user_id']).first()
+    }
+    messages.success(request, 'Successfully logged in!')
+    return render(request, 'email_and_registration/success.html', context)
+
+def logout(request):
+    request.session.flush()
+    return redirect('users:index')
