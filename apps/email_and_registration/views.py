@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from datetime import datetime
 from .models import User
+from ..wish_items.models import WishItem
 
 # Create your views here.
 def index(request):
@@ -64,7 +65,8 @@ def dashboard(request):
 
     # get all users wishlist, get a few other ppls wishlist items
     user = User.objects.filter(id=request.session['user_id']).first()
-    print user.wish_items.all()
+    # print user.wish_items.all()
+    # WishItem.objects.all().delete()
     context = {
         'user': user
     }

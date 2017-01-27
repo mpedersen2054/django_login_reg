@@ -26,14 +26,13 @@
 
     <div class="row">
       <div class="col-md-8">
-        <h1>iPhone 99</h1>
+        <h1>{{item.name}}</h1>
 
         <h3>Users who have this added to their wishlist:</h3>
         <ul>
-          <li>Mark</li>
-          <li>Frank</li>
-          <li>Paul</li>
-          <li>Sam</li>
+          {% for user in item.user_set.all %}
+            <li>{{user.name}}</li>
+          {% endfor %}
         </ul>
       </div>
     </div>

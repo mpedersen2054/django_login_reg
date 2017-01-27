@@ -4,6 +4,7 @@ import bcrypt
 from datetime import datetime
 from django.db import models
 from ..wish_items.models import WishItem
+# from django.contrib.auth.models import WishItem
 
 class UserManager(models.Manager):
     def validate_register(self, registerData):

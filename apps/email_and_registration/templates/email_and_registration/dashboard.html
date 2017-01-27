@@ -55,12 +55,12 @@
               {% for item in user.wish_items.all %}
                 <tr>
                   <td>
-                    <a href="#">{{item.name}}</a>
+                    <a href="{% url 'wish_items:show_item' id=item.id %}">{{item.name}}</a>
                   </td>
                   <td>{{user.name}}</td>
                   <td>{{item.created_at}}</td>
                   <td>
-                    <a href="#">Remove from wishlist</a>
+                    <a href="{% url 'wish_items:remove_item' id=item.id %}">Remove from wishlist</a>
                   </td>
                 </tr>
               {% endfor %}
