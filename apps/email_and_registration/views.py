@@ -12,22 +12,24 @@ def index(request):
     return render(request, 'email_and_registration/index.html', context)
 
 def register(request):
-    errors = User.objects.validate_register(request.POST)
-
-    if len(errors) > 0:
-        for error in errors:
-            messages.error(request, error)
-    else:
-        user_with_encrypted = User.objects.encrypt_password(request.POST)
-        new_user = User.objects.create(
-            first_name = user_with_encrypted['first_name'],
-            last_name = user_with_encrypted['last_name'],
-            email = user_with_encrypted['email'],
-            password = user_with_encrypted['password']
-        )
-        request.session['user_id'] = new_user.id
-        messages.success(request, 'Successfully registered user.')
-    return redirect('users:success')
+    print request.POST
+    return redirect('/')
+    # errors = User.objects.validate_register(request.POST)
+    #
+    # if len(errors) > 0:
+    #     for error in errors:
+    #         messages.error(request, error)
+    # else:
+    #     user_with_encrypted = User.objects.encrypt_password(request.POST)
+    #     new_user = User.objects.create(
+    #         first_name = user_with_encrypted['first_name'],
+    #         last_name = user_with_encrypted['last_name'],
+    #         email = user_with_encrypted['email'],
+    #         password = user_with_encrypted['password']
+    #     )
+    #     request.session['user_id'] = new_user.id
+    #     messages.success(request, 'fully registered user.')
+    # return redirect('users:dashboard')
 
 def login(request):
     # returns tuple (id, [errors...])
@@ -38,21 +40,21 @@ def login(request):
             messages.error(request, error)
     else:
         request.session['user_id'] = user_id
-        messages.success(request, 'Successfully logged in!')
-    return redirect('users:success')
+        messages.success(request, 'fully logged in!')
+    return redirect('users:dashboard')
 
-def success(request):
-    if not 'user_id' in request.session \
-    or request.session['user_id'] == None:
-        messages.error(request, 'You need to be logged in to go to that route.')
-        return redirect('users:index')
+def dashboard(request):
+    # if not 'user_id' in request.session \
+    # or request.session['user_id'] == None:
+    #     messages.error(request, 'You need to be logged in to go to that route.')
+    #     return redirect('users:index')
     context = {
-        'user': User.objects.filter(id=request.session['user_id']).first()
+        # 'user': User.objects.filter(id=request.session['user_id']).first()
     }
-    # messages.success(request, 'Successfully logged in!')
-    return render(request, 'email_and_registration/success.html', context)
+    # messages.success(request, 'fully logged in!')
+    return render(request, 'email_and_registration/dashboard.html', context)
 
 def logout(request):
     request.session.flush()
-    messages.success(request, 'Successfully logged out!')
+    messages.success(request, 'fully logged out!')
     return redirect('users:index')

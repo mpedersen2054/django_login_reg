@@ -66,12 +66,6 @@ class UserManager(models.Manager):
                 print 'PASSWORD MATCHED!!!'
             else:
                 errors.append('User with that email exists, but password was incorrect.')
-            # hashed = bcrypt.hashpw(loginData['password'].encode(), bcrypt.gensalt())
-            # print hashed == bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()), 'PASS MATCH???'
-            # print user.password
-            # print bcrypt.hashpw(loginData['password'], hashed)
-            # if not user.password.encode() == bcrypt.hashpw(loginData['password'].encode(), hashed):
-            #     errors.append('Password was not correct.')
 
         if user:
             return (user.id, errors)

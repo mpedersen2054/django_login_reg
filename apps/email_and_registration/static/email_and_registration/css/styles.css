@@ -1,3 +1,5 @@
 .messages { margin: 0; padding: 0; list-style: none; }
 .messages .error { background-color: red; color: #fff; }
 .messages .success { background-color: green; color: #fff; }
+
+.align-right { text-align: right; }
